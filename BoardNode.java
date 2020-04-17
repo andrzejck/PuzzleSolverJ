@@ -7,8 +7,8 @@ public class BoardNode {
     private ArrayList<BoardNode> nextList;
     private ArrayList<BoardNode> prevList;
     private Point point;
-    private double angle;
-    private double angleTo0;
+    private float angle;
+    private float angleTo0;
 
     public BoardNode(BoardNode boardNode) {
         this.nextList=boardNode.nextList;
@@ -25,11 +25,11 @@ public class BoardNode {
     }
 
 
-    public double getAngle() {
+    public float getAngle() {
         return angle;
     }
 
-    public double getAngleTo0() {
+    public float getAngleTo0() {
         return angleTo0;
     }
 
@@ -37,7 +37,7 @@ public class BoardNode {
         nextList.add(next);
         next.addPrev(this);
         BoardNode prev=getPrev();
-        angleTo0 = new Segment(point.getX(), point.getY(), point.getX(), 0.0).angleBetween(new Segment(point, next.getPoint()));
+        angleTo0 = new Segment(point.getX(), point.getY(), point.getX(), 0.0f).angleBetween(new Segment(point, next.getPoint()));
         if (prev != null){
             angle = new Segment(point,next.getPoint()).angleBetween(new Segment(point, prev.getPoint()));
 

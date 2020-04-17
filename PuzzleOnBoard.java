@@ -2,57 +2,68 @@ package mensa;
 
 import javafx.scene.canvas.GraphicsContext;
 
-public class PuzzleOnBoard {
-    public Puzzle getPuzzle() {
-        return puzzle;
-    }
+import java.util.ArrayList;
 
-    public void setPuzzle(Puzzle puzzle) {
-        this.puzzle = puzzle;
-    }
-
-    public double getAngle() {
-        return angle;
-    }
-
-    public void setAngle(double angle) {
-        this.angle = angle;
-    }
-
-    public Point getPoint() {
-        return point;
-    }
-
-    public void setPoint(Point point) {
-        this.point = point;
-    }
-
-    public int getPointId() {
-        return pointId;
-    }
-
-    public void setPointId(int pointId) {
-        this.pointId = pointId;
-    }
-
-    public PuzzleOnBoard(Puzzle puzzle, double angle, Point point, int pointId, boolean flipped) {
-        this.puzzle = puzzle;
-        this.angle = angle;
-        this.point = point;
-        this.pointId = pointId;
-        this.flipped = flipped;
-    }
-
+public class PuzzleOnBoard extends Puzzle {
+    private float angle;
+    private Point vector;
+    private int centerPointId=-1;
     private Puzzle puzzle;
-    private double angle;
-    private Point point;
-    private int pointId;
-    private boolean flipped;
 
-    public void draw(GraphicsContext gc) {
-        puzzle.setPosition(point.getX(), point.getY(),pointId, flipped, 0, angle);
-        puzzle.draw(gc);
+    private void reset(){
+
+    }
+    public PuzzleOnBoard takePuzzle(Puzzle puzzle){
+        this.puzzle = puzzle;
+        return this;
+    }
+    public PuzzleOnBoard rotate(float angle){
+        this.angle = angle;
+        return this;
     }
 
+    public PuzzleOnBoard move(Point vector){
+        this.vector = vector;
+        return this;
+    }
 
+    public PuzzleOnBoard aroundPoint(int centerPointId){
+        this.centerPointId = centerPointId;
+        return this;
+    }
+
+    public PuzzleOnBoard placeOnBoard(){
+        if(puzzle == null)
+            throw new IllegalStateException("puzzle is null");
+        PuzzleOnBoard  puzzleOnBoard  = new PuzzleOnBoard(puzzle);
+        puzzleOnBoard.angle = angle;
+        puzzleOnBoard.vector = vector;
+        puzzleOnBoard.centerPointId = centerPointId;
+        puzzleOnBoard.puzzle = puzzle;
+
+        puzzleOnBoard.rotate(angle, centerPointId);
+        puzzleOnBoard.translate(vector);
+        return puzzleOnBoard;
+
+    }
+
+    public PuzzleOnBoard(){
+
+    }
+
+    public PuzzleOnBoard(Puzzle p){
+        super(p);
+    }
+
+    @Override
+    public void draw(GraphicsContext gc, Point centerPoint, float scale) {
+        super.draw(gc, centerPoint, scale);
+        Point cg = new Point(0,0);
+        for(int i=0; i < getPointsCount(); i++){
+            cg.move(getPoint(i));
+        }
+        gc.strokeText(getId(),
+                cg.getX()/getPointsCount()*scale+centerPoint.getX(),
+                cg.getY()/getPointsCount()*scale+centerPoint.getY());
+    }
 }
