@@ -31,13 +31,13 @@ public class Point {
     //@Override
     @Override
     public String toString() {
-        return toString("-");
+        return toString("");
     }
 
     public String toString(String id) {
-        return "Point ["+id+"]{" +
-                "x=" + x +
-                ", y=" + y +
+        return "["+id+"]{" +
+                "x=" + (int)x +
+                ", y=" + (int)y +
                 '}';
     }
 
