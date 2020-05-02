@@ -10,13 +10,15 @@ public class PuzzleRepository {
 
     public PuzzleRepository(PuzzleRepository pr){
         puzzles = new HashMap<>(pr.puzzles);
-        puzzleCnt = new HashMap<>();
+        puzzleCnt = new HashMap<>(pr.puzzleCnt);
+        puzzlesArr = new ArrayList<>(pr.puzzlesArr);
         pr.puzzleCnt.entrySet().stream().forEach((es) -> {puzzleCnt.put(es.getKey(), Integer.valueOf(es.getValue()));});
     }
 
     public PuzzleRepository(){
         puzzles = new HashMap<>();
         puzzleCnt = new HashMap<>();
+        puzzlesArr = new ArrayList<>();
     }
 
     public void add(Puzzle p){
@@ -48,13 +50,15 @@ public class PuzzleRepository {
         return puzzles.get(id);
     }
 
+
+
     public void generateSimplified1(){
         //13+11
         //12+16
         //14+8
 
         
-        Puzzle t = new Puzzle("0");
+        Puzzle t = new Puzzle("0|1");
         t.addPoint(new Point(0,0));
         t.addPoint(new Point(363,0));
         t.addPoint(new Point(0,363));
@@ -62,7 +66,7 @@ public class PuzzleRepository {
         t.calculate();
         add(t);
 
-        t = new Puzzle("1");
+        t = new Puzzle("0|1");
         t.addPoint(new Point(0,0));
         t.addPoint(new Point(363,0));
         t.addPoint(new Point(0,363));
@@ -70,7 +74,7 @@ public class PuzzleRepository {
         t.calculate();
         add(t);
 
-        t = new Puzzle("2");
+        t = new Puzzle("2|3");
         t.addPoint(new Point(0,0));
         t.addPoint(new Point(290,0));
         t.addPoint(new Point(0,290));
@@ -78,7 +82,7 @@ public class PuzzleRepository {
         t.calculate();
         add(t);
 
-        t = new Puzzle("3");
+        t = new Puzzle("2|3");
         t.addPoint(new Point(0,0));
         t.addPoint(new Point(290,0));
         t.addPoint(new Point(0,290));
@@ -104,7 +108,7 @@ public class PuzzleRepository {
         t.calculate();
         add(t);
 
-        t = new Puzzle("6");
+        t = new Puzzle("6|7");
         t.addPoint(new Point(0,0));
         t.addPoint(new Point(555,0));
         t.addPoint(new Point(160,160));
@@ -113,7 +117,7 @@ public class PuzzleRepository {
         t.calculate();
         add(t);
 
-        t = new Puzzle("7");
+        t = new Puzzle("6|7");
         t.addPoint(new Point(0,0));
         t.addPoint(new Point(555,0));
         t.addPoint(new Point(160,160));
@@ -385,5 +389,13 @@ public class PuzzleRepository {
 
         //generatePuzzleRot();
 
+    }
+
+    int size(){
+        return puzzlesArr.size();
+    }
+
+    Puzzle get(int i){
+        return puzzlesArr.get(i);
     }
 }

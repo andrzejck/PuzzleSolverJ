@@ -24,6 +24,13 @@ public class Point {
         return (float)Math.sqrt((x-other.x)*(x-other.x)+(y-other.y)*(y-other.y));
     }
 
+    public Point move(float px, float py){
+        x=x+px;
+        y=y+py;
+        return this;
+    }
+
+
     public void move(Point p){
         x=x+p.getX();
         y=y+p.getY();

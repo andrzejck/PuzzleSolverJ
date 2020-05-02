@@ -14,6 +14,8 @@ import java.util.*;
 
 public class Main extends Application {
     static ArrayList<Puzzle> puzzle;
+    static SolverThread solverThread;
+    static Solver solver;
     //static ArrayList<PuzzleRot> puzzleRot;
     static ArrayList<Polygon> testPolygons;
     static long iterations=0;
@@ -37,11 +39,24 @@ public class Main extends Application {
         Group root = new Group();
         Canvas canvas = new Canvas(1040, 1040);
         GraphicsContext gc = canvas.getGraphicsContext2D();
+        solver = new Solver(gc, new Point(100,100), 0.5f);
+        PuzzleRepository pr = new PuzzleRepository();
+        pr.generateSimplified1();
+        Layout layout = new Layout();
+        layout.addPoint(new Point(0,0));
+        layout.addPoint(new Point(1040,0));
+        layout.addPoint(new Point(1040,1040));
+        layout.addPoint(new Point(0,1040));
+
+        solver.add(solver.new LayoutPuzzles(layout, pr));
+        solverThread = new SolverThread(solver);
+
+        new Thread(solverThread).start();
         //drawMatching(gc);
         //testPolygon.draw(gc, new Point(100,100), 1f);
-        for(Polygon poly: testPolygons){
+        /*for(Polygon poly: testPolygons){
             poly.draw(gc,new Point(100,100), 0.5f);
-        }
+        }*/
 //        drawBoard(gc);
 ///*        Puzzle p = puzzle.get(0);
 //        p.setPosition(0,0,2,false, 0, 0.0);
@@ -146,7 +161,7 @@ public class Main extends Application {
     private static void polygonTest(){
         //generateSimplified1();;
 
-        PuzzleOnBoard puzzleOnBoard = new PuzzleOnBoard();
+/*        PuzzleOnBoard puzzleOnBoard = new PuzzleOnBoard();
         puzzleOnBoard = puzzleOnBoard.takePuzzle(puzzle.get(10))
                                       .rotate((float)Math.PI/5)
                                       .aroundPoint(0)
@@ -160,7 +175,7 @@ public class Main extends Application {
                 .move(new Point(800, 800))
                 .placeOnBoard();
         testPolygons.add(puzzleOnBoard);
-        testPolygons.add(puzzleOnBoard1);
+        testPolygons.add(puzzleOnBoard1);*/
 //        testPolygon.calculate();System.out.println(testPolygon.toString());
 //        testPolygon.addPoint(1, new Point (120,30));
 //        testPolygon.calculate();
@@ -218,57 +233,6 @@ public class Main extends Application {
     //public  modify
 
     public static void main(String[] args) {
-        testPolygons = new ArrayList<>();
-        polygonTest();
-        puzzleRepository = new PuzzleRepository();
-        puzzleRepository.generateSimplified1();
-
-        puzzleOnBoardRepository = PuzzleOnBoardRepository.getInstance();
-        puzzleOnBoardRepository.setPuzzleRepository(puzzleRepository);
-
-        //System.exit(0);
-        //return;
-        //generateAll();
-
-        //System.out.println(Math.abs(-5%3));
-       // testIntersections();
-       // sectionTests();
-//        generator = new Random();
-//
-//        generateSimplified1();
-//        //generatePuzzleRot();
-//
-//
-//
-//        ArrayList<PuzzleRot> prDeg90 = new ArrayList<>();
-//
-//
-////        for(PuzzleRot pr: puzzleRot){
-////            if ((pr.getLeftAngle() < DEG90 + Layout.ANG_DELTA)){
-////                prDeg90.add(pr);
-////            }
-////        }
-// //       PuzzleRot first  = prDeg90.get(generator.nextInt(prDeg90.size()));
-//
-//        ArrayList<Puzzle> available = new ArrayList<>(puzzle);
-//        //available.remove(first.getPuzzle());
-//        puzzleLayout = new ArrayList<>();
-//        puzzleLayout.add(new PuzzleOnBoard(available.get(2),0.0f, new Point(0.0f,0.0f),0, false));
-//        puzzleLayout.add(new PuzzleOnBoard(available.get(1),0.0f, new Point(0.0f,290f),2, false));
-//        puzzleLayout.add(new PuzzleOnBoard(available.get(0),DEG90/2, new Point(0.0f,290f),0, false));
-//
-//        boardNodeRoot = new BoardNode(new Point(0.0f,0.0f));
-//        boardNodeRoot.addNext(new BoardNode(new Point(1040, 0.0f)));
-//        boardNodeRoot.getNext().addNext(new BoardNode(new Point(1040, 1040)));
-//        boardNodeRoot.getNext().getNext().addNext(new BoardNode(new Point(0, 1040)));
-//        boardNodeRoot.getNext().getNext().getNext().addNext(boardNodeRoot);
-//
-//        //matching = findAllMatching(DEG180 - first.getLeftAngle(), 1040- first.getSideLength(),0, available,first, first);
-//        //matching.push(first);
-//
-//        System.out.println(matching);
-
-
 
         launch(args);
 

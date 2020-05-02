@@ -36,6 +36,8 @@ public class Puzzle extends Polygon {
         this.id = id;
     }
 
+
+
     Puzzle(){
         super();
     }

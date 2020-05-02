@@ -8,9 +8,12 @@ public class PuzzleOnBoard extends Puzzle {
     private float angle;
     private Point vector;
     private int centerPointId=-1;
+    private boolean fliped = false;
+
     private String puzzleId;
     private Puzzle puzzle;
     private String coordinates;
+
 
     //private
 
@@ -28,7 +31,7 @@ public class PuzzleOnBoard extends Puzzle {
     }
 
     public PuzzleOnBoard move(Point vector){
-        this.vector = vector;
+        this.vector = new Point(vector);
         return this;
     }
 
@@ -37,16 +40,22 @@ public class PuzzleOnBoard extends Puzzle {
         return this;
     }
 
+    public PuzzleOnBoard flip(boolean f){
+        this.fliped=f;
+        return this;
+    }
+
     public String getCoordinates() {
         return coordinates;
     }
 
-    public static String generateCoordinates(String puzzleId, float angle, Point vector, int centerPointId) {
+    public static String generateCoordinates(String puzzleId, float angle, Point vector, int centerPointId, boolean fliped) {
         StringBuilder tmpCoordinates=new StringBuilder();
         tmpCoordinates.append(puzzleId)
                 .append((int)(angle*60))
                 .append(vector.toString())
-                .append(centerPointId);
+                .append(centerPointId)
+                .append(fliped);
          return tmpCoordinates.toString();
     }
 
@@ -56,12 +65,16 @@ public class PuzzleOnBoard extends Puzzle {
         PuzzleOnBoard  puzzleOnBoard  = new PuzzleOnBoard(puzzle);
         puzzleOnBoard.puzzleId = puzzleId;
         puzzleOnBoard.angle = angle;
-        puzzleOnBoard.vector = vector;
+        puzzleOnBoard.vector = new Point(vector);
         puzzleOnBoard.centerPointId = centerPointId;
+        puzzleOnBoard.fliped = fliped;
         puzzleOnBoard.puzzle = puzzle;
-        puzzleOnBoard.coordinates = generateCoordinates(puzzleId, angle, vector, centerPointId);
+        puzzleOnBoard.coordinates = generateCoordinates(puzzleId, angle, vector, centerPointId, fliped);
+        if(fliped)
+            puzzleOnBoard.flipVertical();
         puzzleOnBoard.rotate(angle, centerPointId);
-        puzzleOnBoard.translate(vector);
+        puzzleOnBoard.translate(vector.move(-puzzleOnBoard.getPoint(centerPointId).getX(),
+                                            -puzzleOnBoard.getPoint(centerPointId).getY()));
         return puzzleOnBoard;
 
     }
@@ -76,7 +89,9 @@ public class PuzzleOnBoard extends Puzzle {
 
         if (Float.compare(that.angle, angle) != 0) return false;
         if (centerPointId != that.centerPointId) return false;
+        if (fliped != that.fliped) return false;
         if (vector != null ? !vector.equals(that.vector) : that.vector != null) return false;
+
         return puzzleId.equals(that.puzzleId);
     }
 
@@ -87,6 +102,7 @@ public class PuzzleOnBoard extends Puzzle {
         result = 31 * result + (vector != null ? vector.hashCode() : 0);
         result = 31 * result + centerPointId;
         result = 31 * result + puzzleId.hashCode();
+        result = 31 * result + (fliped?1:0);
         return result;
     }
 
@@ -106,7 +122,7 @@ public class PuzzleOnBoard extends Puzzle {
         for(int i=0; i < getPointsCount(); i++){
             cg.move(getPoint(i));
         }
-        gc.strokeText(getId(),
+        gc.strokeText(getId()+(fliped?" f ":""),
                 cg.getX()/getPointsCount()*scale+centerPoint.getX(),
                 cg.getY()/getPointsCount()*scale+centerPoint.getY());
     }

@@ -19,13 +19,14 @@ public class PuzzleOnBoardRepository {
 
     public static PuzzleOnBoardRepository getInstance() {return PuzzleOnBoardRepositoryHelper.INSTANCE; }
 
-    PuzzleOnBoard get(String puzzleId, float angle, Point vector, int centerPointId){
-        String coordinates = PuzzleOnBoard.generateCoordinates(puzzleId, angle, vector, centerPointId);
+    PuzzleOnBoard getOrConstruct(String puzzleId, float angle, Point vector, int centerPointId, boolean fliped){
+        String coordinates = PuzzleOnBoard.generateCoordinates(puzzleId, angle, vector, centerPointId, fliped);
         if (repo.containsKey(coordinates)){
             return repo.get(coordinates);
         }else{
             PuzzleOnBoard puzzleOnBoard = new PuzzleOnBoard();
             puzzleOnBoard = puzzleOnBoard.takePuzzle(puzzleRepository.getById(puzzleId))
+                    .flip(fliped)
                     .rotate(angle)
                     .aroundPoint(centerPointId)
                     .move(vector)
@@ -35,6 +36,14 @@ public class PuzzleOnBoardRepository {
         }
 
 
+    }
+
+    boolean contains(String puzzleId, float angle, Point vector, int centerPointId, boolean fliped){
+       return repo.containsKey(PuzzleOnBoard.generateCoordinates(puzzleId, angle, vector, centerPointId, fliped));
+    }
+
+    void put(PuzzleOnBoard p){
+        repo.put(p.getCoordinates(), p);
     }
 
     /*PuzzleOnBoard get(String coordinates){

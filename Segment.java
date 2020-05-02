@@ -67,10 +67,10 @@ public class Segment {
     // assume that this.A = other.A
     public float angleBetween(Segment other){
         float x1=B.getX()-A.getX();
-        float x2=other.B.getX()-A.getX();
+        float x2=other.B.getX()-other.A.getX();
         float y1=B.getY()-A.getY();
 
-        float y2=other.B.getY()-A.getY();
+        float y2=other.B.getY()-other.A.getY();
 ;
         float dot = x1*x2 + y1*y2;//      # dot product between [x1, y1] and [x2, y2]
         float det = x1*y2 - y1*x2;//      # determinant

@@ -75,10 +75,18 @@ public class Polygon {
 
     public void addPoint(int index, Point p)
     {
+        if (index > (pointsCount-1)){
+            points.add(p);
+            angles.add(0f);
+            sides.add(0f);
 
-        points.add(cir(index), p);
-        angles.add(cir(index), 0f);
-        sides.add(cir(index), 0f);
+        }else{
+            points.add(cir(index), p);
+            angles.add(cir(index), 0f);
+            sides.add(cir(index), 0f);
+
+        }
+
         pointsCount++;
         calculated=false;
     }
@@ -120,7 +128,7 @@ public class Polygon {
             if(tmpSeg.pointOnSegment(p))
                 return 1;
             if(getPoint(i).getY() <= p.getY()){
-                if(getPoint(i).getY() > p.getY()){
+                if(getPoint(i+1).getY() > p.getY()){
                     if(tmpSeg.isLeft(p) > 0){
                         wn++;
                     }
@@ -355,12 +363,12 @@ public class Polygon {
             }
         }
         int l = intPointId;
-        ++lastBeforeRemoved;
+        //++lastBeforeRemoved;
         for(Point p: o.points){
             if( ! intPointsToRemove.containsKey(l)){
-                res.addPoint(lastBeforeRemoved,o.getPoint(l));
+                res.addPoint(++lastBeforeRemoved,o.getPoint(l));
             }
-            l=o.cir(l+1);
+            l=o.cir(l-1);
         }
         res.calculate();
         return res;
@@ -392,6 +400,19 @@ public class Polygon {
             return false;
         }
     }
+
+    public boolean hasNextPoint(){
+        return points.iterator().hasNext();
+    }
+
+    public Point nextPoint(){
+        return points.iterator().next();
+    }
+
+    public float getAngleToSegment(int pointId, int nextPointId, Segment segment){
+        return new Segment(getPoint(pointId), getPoint(nextPointId)).angleBetween(segment);
+    }
+
 
     @Override
     public int hashCode() {
