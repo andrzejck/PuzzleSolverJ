@@ -8,12 +8,12 @@ import java.util.Objects;
 
 public class Puzzle extends Polygon {
     private String id;
-    private boolean twoSided=false;
-    private int sidesIterable=0;
+    private boolean twoSided = false;
+    private int sidesIterable = 0;
     public static float DEG180 = (float) Math.PI;
 
     public Puzzle getMirrorRefl() {
-        if(mirrorRefl == null)
+        if (mirrorRefl == null)
             throw new IllegalStateException("mirror refl is null");
         return mirrorRefl;
     }
@@ -26,7 +26,7 @@ public class Puzzle extends Polygon {
 
     public void setTwoSided(boolean twoSided) {
         this.twoSided = twoSided;
-        if(twoSided) {
+        if (twoSided) {
             generateMirrorRefl();
         }
     }
@@ -48,29 +48,29 @@ public class Puzzle extends Polygon {
     }
 
 
-
-    Puzzle(){
+    Puzzle() {
         super();
     }
 
-    Puzzle(String id){
+    Puzzle(String id) {
         super();
         this.id = id;
         mirrorRefl = null;
     }
 
-    Puzzle(Puzzle p){
-        super((Polygon)p);
-        this.id=p.id;
-        this.sidesIterable=p.sidesIterable;
-        this.twoSided=p.twoSided;
+    Puzzle(Puzzle p) {
+        super((Polygon) p);
+        this.id = p.id;
+        this.sidesIterable = p.sidesIterable;
+        this.twoSided = p.twoSided;
         if (p.mirrorRefl != null)
-            this.mirrorRefl=new PuzzleOnBoard(p.mirrorRefl);
+            this.mirrorRefl = new PuzzleOnBoard(p.mirrorRefl);
         else
             p.mirrorRefl = null;
     }
-    public void generateMirrorRefl(){
-        mirrorRefl=new Puzzle(this);
+
+    public void generateMirrorRefl() {
+        mirrorRefl = new Puzzle(this);
         mirrorRefl.flipVertical();
     }
 

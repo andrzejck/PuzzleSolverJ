@@ -28,8 +28,8 @@ import javafx.scene.image.WritableImage;
 public class Solver {
     private static final String FILE_FORMAT = "png";
 
-    int iterations=0;
-    int predict=-1;
+    int iterations = 0;
+    int predict = -1;
     private int cacheMiss = 0;
     private int cacheHit = 0;
     private GraphicsContext gc;
@@ -44,19 +44,16 @@ public class Solver {
     private Instant finish;
 
 
-
     private Canvas canvas;
     private GraphicsContext localGc;
     //private static final Logger LOGGER = LogManager.getLogger(Snapshot.class);
-
-
 
 
     public static String saveToFile(final Canvas canvas, String name) {
         File destination;
         final WritableImage writableImage = new WritableImage((int) canvas.getWidth(), (int) canvas.getHeight());
         final WritableImage snapshot = canvas.snapshot(new SnapshotParameters(), writableImage);
-        destination = new File("/tmp/" + name+".png");
+        destination = new File("/tmp/" + name + ".png");
         try {
             ImageIO.write(SwingFXUtils.fromFXImage(snapshot, null), FILE_FORMAT, destination);
 
@@ -78,7 +75,7 @@ public class Solver {
         //this.destination =
     }
 
-    public class LayoutPuzzles implements Comparable<LayoutPuzzles>{
+    public class LayoutPuzzles implements Comparable<LayoutPuzzles> {
         private Layout layout;
         private PuzzleRepository puzzles;
 
@@ -123,7 +120,7 @@ public class Solver {
         }
 
         @Override
-        public int compareTo(LayoutPuzzles o){
+        public int compareTo(LayoutPuzzles o) {
             //return getLayout().getIteration() - o.getLayout().getIteration();
 
             //*************************************************
@@ -131,41 +128,43 @@ public class Solver {
             // return (int)((Math.random() - 1.1f) * 2.2f);
 
             //*************************************************
-            if(o.getPuzzles().size() == puzzles.size()) {
+            if (o.getPuzzles().size() == puzzles.size()) {
                 return layout.getPointsCount() - o.getLayout().getPointsCount();
-            }else{
+            } else {
                 return puzzles.size() - o.getPuzzles().size();
             }
             //*************************************************
 
- //           return o.getLayout().getPointsCount()- layout.getPointsCount();
+            //           return o.getLayout().getPointsCount()- layout.getPointsCount();
         }
 
 
     }
 
 
-    public void add(LayoutPuzzles lp){
+    public void add(LayoutPuzzles lp) {
         layoutPuzzles.add(lp);
 
     }
+
     void solve() throws InterruptedException {
         //writableImage = new WritableImage(50,50);
         canvas = new Canvas(50, 50);
         localGc = canvas.getGraphicsContext2D();
 
         start = Instant.now();
-        while(! layoutPuzzles.isEmpty()){
+        while (!layoutPuzzles.isEmpty()) {
             LayoutPuzzles lp = layoutPuzzles.poll();
             createNewLayouts(lp.getLayout(), lp.getPuzzles());
         }
     }
 
-    void drawLeftPuzzles(GraphicsContext gc, PuzzleRepository availablePuzzles, Point centerPoint, float scale){
-        for(int i=0; i < availablePuzzles.size(); i++){
+    void drawLeftPuzzles(GraphicsContext gc, PuzzleRepository availablePuzzles, Point centerPoint, float scale) {
+        for (int i = 0; i < availablePuzzles.size(); i++) {
             availablePuzzles.get(i).drawFilled(gc, centerPoint.move(0, 70), scale);
         }
     }
+
     void createNewLayouts(Layout layout, PuzzleRepository availablePuzzles) throws InterruptedException {
         // take all
         String s;
@@ -174,17 +173,17 @@ public class Solver {
         Layout newLayout;
         PuzzleRepository newAvailablePuzzles;
         PuzzleOnBoardRepository puzzleOnBoardRepository = PuzzleOnBoardRepository.getInstance();
-        BufferedImage image = new BufferedImage(50,50,BufferedImage.TYPE_BYTE_GRAY);
+        BufferedImage image = new BufferedImage(50, 50, BufferedImage.TYPE_BYTE_GRAY);
         //int predict=0;
-        for(int i = 0; i < layout.getPointsCount(); i++) {
-            if(layout.getPoint(i).isTag()){
+        for (int i = 0; i < layout.getPointsCount(); i++) {
+            if (layout.getPoint(i).isTag()) {
                 for (int j = 0; j < availablePuzzles.size(); j++) {
                     for (int f = 0; f < (availablePuzzles.get(j).isTwoSided() ? 2 : 1); f++) {
                         for (int k = 0; k < availablePuzzles.get(j).getSidesIterable(); k++) {
 
                             float envelopeAngleToSegment0 = layout.getAngleToSegment(i, i + 1, context.getSegment0());
 
-                            float angle=0;
+                            float angle = 0;
                             if (f == 0)
                                 angle = -layout.getAngleToSegment(i, i + 1, new Segment(availablePuzzles.get(j).getPoint(k), availablePuzzles.get(j).getPoint(k + 1)));
                             else
@@ -224,32 +223,32 @@ public class Solver {
 
 
                                 LayoutPuzzles lp = new LayoutPuzzles(newLayout, newAvailablePuzzles);
-                                if(! cache.contains(lp)) {
+                                if (!cache.contains(lp)) {
                                     cache.add(lp);
                                     cacheMiss++;
                                     Graphics2D graphics2D = image.createGraphics();
                                     graphics2D.setBackground(Color.WHITE);
-                                    newLayout.drawSimplified(graphics2D,new Point(0, 0), 0.05f );
+                                    newLayout.drawSimplified(graphics2D, new Point(0, 0), 0.05f);
                                     predict = layoutPredictor.predict(image);
 
                                     if (predict == 0) {
                                         add(lp);
                                     }
 
-                                }else{
+                                } else {
                                     cacheHit++;
                                 }
-                                if (iterations%100  == 0) {
-                                // if (iterations  >= 513) {
+                                if (iterations % 100 == 0) {
+                                    // if (iterations  >= 513) {
                                     System.out.println("iteration " + iterations
                                             + " queueSize " + layoutPuzzles.size()
-                                            +" duration " + timeElapsed
-                                            +" puzzles left " + newAvailablePuzzles.size()
-                                            +" parentIteration "+layout.getParentIteration()
-                                            +" predict "+predict
-                                            +" cacheSize "+cache.size()
-                                            + " cacheHitRation " + Float.toString((float)cacheHit/((float)cacheMiss+(float)cacheHit))
-                                          );
+                                            + " duration " + timeElapsed
+                                            + " puzzles left " + newAvailablePuzzles.size()
+                                            + " parentIteration " + layout.getParentIteration()
+                                            + " predict " + predict
+                                            + " cacheSize " + cache.size()
+                                            + " cacheHitRation " + Float.toString((float) cacheHit / ((float) cacheMiss + (float) cacheHit))
+                                    );
 
 
 //                                     gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
@@ -257,7 +256,7 @@ public class Solver {
 //                                     layout.draw(gc, centerPoint, scale);
 //                                     layout.drawSimplified(gc, new Point(850, 100), 0.1f);
 //                                     s = in.nextLine();
-                                     gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
+                                    gc.clearRect(0, 0, gc.getCanvas().getWidth(), gc.getCanvas().getHeight());
 
                                     newLayout.draw(gc, centerPoint, scale);
                                     newLayout.drawSimplified(gc, new Point(850, 100), 0.1f);
@@ -269,8 +268,8 @@ public class Solver {
                                             saveToFile(gc.getCanvas(), String.valueOf(iterations));
                                         }
                                     });
-                                    File outputfile = new File("/tmp/"+ String.valueOf(predict)+
-                                            "_buff_"+String.valueOf(iterations)+"_.png");
+                                    File outputfile = new File("/tmp/" + String.valueOf(predict) +
+                                            "_buff_" + String.valueOf(iterations) + "_.png");
                                     try {
                                         ImageIO.write(image, "png", outputfile);
                                     } catch (IOException e) {
@@ -278,8 +277,7 @@ public class Solver {
                                     }
 
 
-
-                                            //;SwingFXUtils.fromFXImage(writableImage, null);
+                                    //;SwingFXUtils.fromFXImage(writableImage, null);
 
 
                                     Thread.sleep(100);

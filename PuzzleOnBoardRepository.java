@@ -12,18 +12,23 @@ public class PuzzleOnBoardRepository {
         this.puzzleRepository = puzzleRepository;
     }
 
-    private PuzzleOnBoardRepository() {  repo = new HashMap<>();  }
-    private static class PuzzleOnBoardRepositoryHelper{
-      private static final PuzzleOnBoardRepository INSTANCE = new PuzzleOnBoardRepository();
+    private PuzzleOnBoardRepository() {
+        repo = new HashMap<>();
     }
 
-    public static PuzzleOnBoardRepository getInstance() {return PuzzleOnBoardRepositoryHelper.INSTANCE; }
+    private static class PuzzleOnBoardRepositoryHelper {
+        private static final PuzzleOnBoardRepository INSTANCE = new PuzzleOnBoardRepository();
+    }
 
-    PuzzleOnBoard getOrConstruct(String puzzleId, float angle, Point vector, int centerPointId, boolean fliped){
+    public static PuzzleOnBoardRepository getInstance() {
+        return PuzzleOnBoardRepositoryHelper.INSTANCE;
+    }
+
+    PuzzleOnBoard getOrConstruct(String puzzleId, float angle, Point vector, int centerPointId, boolean fliped) {
         String coordinates = PuzzleOnBoard.generateCoordinates(puzzleId, angle, vector, centerPointId, fliped);
-        if (repo.containsKey(coordinates)){
+        if (repo.containsKey(coordinates)) {
             return repo.get(coordinates);
-        }else{
+        } else {
             PuzzleOnBoard puzzleOnBoard = new PuzzleOnBoard();
             puzzleOnBoard = puzzleOnBoard.takePuzzle(puzzleRepository.getById(puzzleId))
                     .flip(fliped)
@@ -38,11 +43,11 @@ public class PuzzleOnBoardRepository {
 
     }
 
-    boolean contains(String puzzleId, float angle, Point vector, int centerPointId, boolean fliped){
-       return repo.containsKey(PuzzleOnBoard.generateCoordinates(puzzleId, angle, vector, centerPointId, fliped));
+    boolean contains(String puzzleId, float angle, Point vector, int centerPointId, boolean fliped) {
+        return repo.containsKey(PuzzleOnBoard.generateCoordinates(puzzleId, angle, vector, centerPointId, fliped));
     }
 
-    void put(PuzzleOnBoard p){
+    void put(PuzzleOnBoard p) {
         repo.put(p.getCoordinates(), p);
     }
 

@@ -11,18 +11,16 @@ import javafx.stage.Stage;
 import java.util.*;
 
 
-
-
 public class Main extends Application {
     static ArrayList<Puzzle> puzzle;
     static SolverThread solverThread;
     static Solver solver;
     //static ArrayList<PuzzleRot> puzzleRot;
     static ArrayList<Polygon> testPolygons;
-    static long iterations=0;
-    final static float DEG180= 3.1415f;
-    final static float DEG90=3.1415f/2;
-    final static Puzzle t=null;
+    static long iterations = 0;
+    final static float DEG180 = 3.1415f;
+    final static float DEG90 = 3.1415f / 2;
+    final static Puzzle t = null;
     //static PuzzleNode root;
     private static Random generator;
     private static ArrayList<PuzzleOnBoard> puzzleLayout;
@@ -34,20 +32,20 @@ public class Main extends Application {
     private static PuzzleOnBoardRepository puzzleOnBoardRepository;
 
     @Override
-    public void start(Stage primaryStage) throws Exception{
+    public void start(Stage primaryStage) throws Exception {
 
         primaryStage.setTitle("Mensa Puzzle");
         Group root = new Group();
         Canvas canvas = new Canvas(1040, 1040);
         GraphicsContext gc = canvas.getGraphicsContext2D();
-        solver = new Solver(gc, new Point(100,100), 0.5f);
+        solver = new Solver(gc, new Point(100, 100), 0.5f);
         PuzzleRepository pr = new PuzzleRepository();
         pr.generateSimplified1();
         Layout layout = new Layout();
-        layout.addPoint(new Point(0,0));
-        layout.addPoint(new Point(1040,0));
-        layout.addPoint(new Point(1040,1040));
-        layout.addPoint(new Point(0,1040));
+        layout.addPoint(new Point(0, 0));
+        layout.addPoint(new Point(1040, 0));
+        layout.addPoint(new Point(1040, 1040));
+        layout.addPoint(new Point(0, 1040));
         layout.getPoint(0).setTag(true);
 //        float angle=0;
 //        PuzzleOnBoard puzzleOnBoard =  new PuzzleOnBoard();
@@ -72,28 +70,24 @@ public class Main extends Application {
         new Thread(solverThread).start();
 
 
-
         root.getChildren().add(canvas);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 
 
-
-
-
-    public static void drawBoard(GraphicsContext gc){
+    public static void drawBoard(GraphicsContext gc) {
         gc.setFill(Color.GREEN);
         gc.setStroke(Color.GREEN);
         gc.setLineWidth(4);
         BoardNode boardNode = boardNodeRoot;
-        while(boardNode.getNext() != boardNodeRoot){
+        while (boardNode.getNext() != boardNodeRoot) {
             gc.strokeLine(boardNode.getPoint().getX(),
-                          boardNode.getPoint().getY(),
-                          boardNode.getNext().getPoint().getX(),
-                          boardNode.getNext().getPoint().getY());
-            boardNode=boardNode.getNext();
-            System.out.println("BoardNode angle "+boardNode.getAngle());
+                    boardNode.getPoint().getY(),
+                    boardNode.getNext().getPoint().getX(),
+                    boardNode.getNext().getPoint().getY());
+            boardNode = boardNode.getNext();
+            System.out.println("BoardNode angle " + boardNode.getAngle());
         }
         gc.strokeLine(boardNode.getPoint().getX(),
                 boardNode.getPoint().getY(),
@@ -103,26 +97,17 @@ public class Main extends Application {
     }
 
 
-
-
-
-
-
-
-
-
-
     //private stat
-    private static void sectionTests(){
-        Segment a=new Segment(0.0f, 0.0f, 0.0f, 1.0f);
-        Segment b=new Segment(1.0f, 0.0f, 1.0f, -1.0f);
+    private static void sectionTests() {
+        Segment a = new Segment(0.0f, 0.0f, 0.0f, 1.0f);
+        Segment b = new Segment(1.0f, 0.0f, 1.0f, -1.0f);
 
-        Segment c=new Segment(0.0f, 0.0f, 1.0f, 1.0f);
-        Segment d=new Segment(0.0f, 1.0f, 1.0f, 0.0f);
+        Segment c = new Segment(0.0f, 0.0f, 1.0f, 1.0f);
+        Segment d = new Segment(0.0f, 1.0f, 1.0f, 0.0f);
 
-        Segment e=new Segment(0.0f, 0.0f, 0.0f, 1.0f);
+        Segment e = new Segment(0.0f, 0.0f, 0.0f, 1.0f);
 
-        Segment f=new Segment(0.0f, 0.0f, -1.0f, 1.0f);
+        Segment f = new Segment(0.0f, 0.0f, -1.0f, 1.0f);
 
 
         System.out.println(a.inters(b));
@@ -136,7 +121,7 @@ public class Main extends Application {
 
     }
 
-    private static void polygonTest(){
+    private static void polygonTest() {
         //generateSimplified1();;
 
 

@@ -1,4 +1,5 @@
 package mensa;
+
 import org.datavec.image.loader.NativeImageLoader;
 import org.deeplearning4j.nn.modelimport.keras.KerasModelImport;
 import org.deeplearning4j.nn.modelimport.keras.exceptions.InvalidKerasConfigurationException;
@@ -18,7 +19,8 @@ import java.io.IOException;
 public class LayoutPredictor {
     String simpleMlp;
     MultiLayerNetwork model;
-    public LayoutPredictor()  {
+
+    public LayoutPredictor() {
         try {
             String simpleMlp = "/home/ar/dev/puzzleSolver/dataSets/modelLeNet5.h5";
 
@@ -37,24 +39,24 @@ public class LayoutPredictor {
         }
     }
 
-    public int predict(BufferedImage image){
-        ImageLoader imageLoader = new ImageLoader(50,50,1);
+    public int predict(BufferedImage image) {
+        ImageLoader imageLoader = new ImageLoader(50, 50, 1);
 
 
         INDArray indArray = imageLoader.asMatrix(image);
         //DataNormalization scaler = new ImagePreProcessingScaler(0, 1, 22);
-        float a  = indArray.getFloat(0,0);
-        float b = indArray.getFloat(40,40);
+        float a = indArray.getFloat(0, 0);
+        float b = indArray.getFloat(40, 40);
 
         //scaler.transform(indArray);
-        int c = indArray.getInt(0,0);
-        int d = indArray.getInt(40,40);
+        int c = indArray.getInt(0, 0);
+        int d = indArray.getInt(40, 40);
 
         //INDArray indArray = imageLoader.asMatrix(image);
         //return model.output(indArray).getInt(0);
         //NativeImageLoader loader = new NativeImageLoader(50, 50, 1);
         int res = -1;
-        res = model.predict(indArray.reshape(1,1,50,50).add(16777216).div(16777215))[0];
+        res = model.predict(indArray.reshape(1, 1, 50, 50).add(16777216).div(16777215))[0];
 
         return res;
 

@@ -16,7 +16,7 @@ public class Point {
         this.tag = tag;
     }
 
-    public Point(Point p){
+    public Point(Point p) {
         x = p.x;
         y = p.y;
         tag = p.tag;
@@ -25,25 +25,27 @@ public class Point {
     public float getX() {
         return x;
     }
+
     public float getY() {
         return y;
     }
 
-    public float distanceTo(Point other){
-        return (float)Math.sqrt((x-other.x)*(x-other.x)+(y-other.y)*(y-other.y));
+    public float distanceTo(Point other) {
+        return (float) Math.sqrt((x - other.x) * (x - other.x) + (y - other.y) * (y - other.y));
     }
 
-    public Point move(float px, float py){
-        x=x+px;
-        y=y+py;
+    public Point move(float px, float py) {
+        x = x + px;
+        y = y + py;
         return this;
     }
 
 
-    public void move(Point p){
-        x=x+p.getX();
-        y=y+p.getY();
+    public void move(Point p) {
+        x = x + p.getX();
+        y = y + p.getY();
     }
+
     //@Override
     @Override
     public String toString() {
@@ -51,9 +53,9 @@ public class Point {
     }
 
     public String toString(String id) {
-        return "["+id+"]{" +
-                "x=" + (int)x +
-                ", y=" + (int)y +
+        return "[" + id + "]{" +
+                "x=" + (int) x +
+                ", y=" + (int) y +
                 '}';
     }
 
@@ -85,8 +87,8 @@ public class Point {
         this.x = x;
     }
 
-    public static Point substract(Point A, Point B){
-        return new Point(A.getX()-B.getX(), A.getY()-B.getY());
+    public static Point substract(Point A, Point B) {
+        return new Point(A.getX() - B.getX(), A.getY() - B.getY());
     }
 
     @Override
@@ -95,7 +97,7 @@ public class Point {
         if (o == null || getClass() != o.getClass()) return false;
         Point point = (Point) o;
         return Math.abs(point.x - x) < Layout.DIM_DELTA &&
-                Math.abs(point.y - y) <  Layout.DIM_DELTA ;
+                Math.abs(point.y - y) < Layout.DIM_DELTA;
     }
 
     @Override

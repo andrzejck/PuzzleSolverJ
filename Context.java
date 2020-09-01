@@ -12,10 +12,16 @@ public class Context {
     }
 
     private Segment segment0;
-    private Context() { segment0 = new Segment(0,0, 100,0);}
-    private static class ContextHelper{
+
+    private Context() {
+        segment0 = new Segment(0, 0, 100, 0);
+    }
+
+    private static class ContextHelper {
         private static final Context INSTANCE = new Context();
     }
 
-    public static Context getInstance() {return Context.ContextHelper.INSTANCE; }
+    public static Context getInstance() {
+        return Context.ContextHelper.INSTANCE;
+    }
 }

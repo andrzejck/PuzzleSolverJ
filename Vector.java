@@ -3,31 +3,33 @@ package mensa;
 public class Vector {
 
     private float x;
-    private  float y;
+    private float y;
 
-    Vector(Point p){
-        x=p.getX();
-        y=p.getY();
+    Vector(Point p) {
+        x = p.getX();
+        y = p.getY();
     }
-    Vector(float _x, float _y){
-        x=_x;
-        y=_y;
+
+    Vector(float _x, float _y) {
+        x = _x;
+        y = _y;
     }
-    public void normalize(){
-        float len=(float)Math.sqrt(x*x+y*y);
-        if(len != 0) {
-            x = x*(1/len);
-            y = y*(1/len);
+
+    public void normalize() {
+        float len = (float) Math.sqrt(x * x + y * y);
+        if (len != 0) {
+            x = x * (1 / len);
+            y = y * (1 / len);
         }
     }
 
-    public void offset(float offset){
-        x=x*offset;
-        y=y*offset;
+    public void offset(float offset) {
+        x = x * offset;
+        y = y * offset;
     }
 
 
-    public float getX()  {
+    public float getX() {
         return x;
     }
 
@@ -40,9 +42,8 @@ public class Vector {
     }
 
     public void setY(float y) {
-       this.y = y;
+        this.y = y;
     }
-
 
 
 }
