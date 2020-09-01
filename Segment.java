@@ -71,7 +71,7 @@ public class Segment {
         float y1=B.getY()-A.getY();
 
         float y2=other.B.getY()-other.A.getY();
-;
+
         float dot = x1*x2 + y1*y2;//      # dot product between [x1, y1] and [x2, y2]
         float det = x1*y2 - y1*x2;//      # determinant
         float alfa = (float) Math.atan2(det, dot);

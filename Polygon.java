@@ -1,12 +1,16 @@
 package mensa;
 
+
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+
+import java.awt.*;
 import java.util.*;
 //import java.util.Collection;
 
 import static java.lang.Float.NaN;
+import static mensa.Layout.ANG_DELTA;
 import static mensa.Layout.DIM_DELTA;
 
 
@@ -73,8 +77,17 @@ public class Polygon {
         calculated=false;
     }
 
-    public void addPoint(int index, Point p)
+
+
+    public boolean addPoint(int index, Point p)
     {
+        if ((p.equals(getPoint(index))) ||
+          (p.equals(getPoint(index-1))) ||
+                  (p.equals(getPoint(index+1)))) {
+            //point already exists
+            return false;
+        }
+
         if (index > (pointsCount-1)){
             points.add(p);
             angles.add(0f);
@@ -89,6 +102,7 @@ public class Polygon {
 
         pointsCount++;
         calculated=false;
+        return true;
     }
 
     public void removePoint(int index){
@@ -222,12 +236,19 @@ public class Polygon {
     }
 
     public Polygon flipVertical(){
+        float minX = 1000;
         for(Point p: points){
             p.setX(-p.getX());
+//            if (p.getX() < minX)
+//                minX = p.getX();
         }
+//        for(Point p: points){
+//            p.setX(p.getX() - minX);
+//        }
         Collections.reverse(points);
         Collections.reverse(angles);
         Collections.reverse(sides);
+        calculate();
         return this;
     }
 
@@ -270,6 +291,89 @@ public class Polygon {
 
 
 
+    }
+
+    public void drawSimplified(GraphicsContext gc, Point centerPoint, float scale){
+
+        if(pointsCount < 3)
+            throw new IllegalStateException("Less than 3 points in polygon.");
+        Point prev=null;
+        gc.setFill(color);
+        gc.setStroke(color);
+        gc.setLineWidth(1);
+
+        float cX = centerPoint.getX();
+        float cY = centerPoint.getY();
+        for(int i = 0; i < pointsCount; i++){
+            gc.strokeLine(getPoint(i).getX()*scale+cX,
+                    getPoint(i).getY()*scale+cY,
+                    getPoint(i+1).getX()*scale+cX,
+                    getPoint(i+1).getY()*scale+cY);
+
+        }
+
+
+
+    }
+
+    public void drawSimplified(Graphics2D graphics2D, Point centerPoint, float scale){
+        if(pointsCount < 3)
+            throw new IllegalStateException("Less than 3 points in polygon.");
+        java.awt.Polygon awtPolygon = new java.awt.Polygon();
+
+        float cX = centerPoint.getX();
+        float cY = centerPoint.getY();
+        for(int i = 0; i < pointsCount; i++){
+            awtPolygon.addPoint((int) ((getPoint(i).getX()*scale) + cX),
+                                 (int)((getPoint(i).getY()*scale)+cY));
+
+        }
+        graphics2D.draw(awtPolygon);
+
+
+
+    }
+
+
+    public void drawFilled(GraphicsContext gc, Point centerPoint, float scale){
+
+        if(pointsCount < 3)
+            throw new IllegalStateException("Less than 3 points in polygon.");
+        Point prev=null;
+        gc.setFill(color);
+        gc.setStroke(color);
+        gc.setLineWidth(1);
+
+        float cX = centerPoint.getX();
+        float cY = centerPoint.getY();
+        double pointsX[] = new double[pointsCount];
+        double pointsY[] = new double[pointsCount];
+
+        for(int i = 0; i < pointsCount; i++){
+            pointsX[i] = getPoint(i).getX()*scale+cX;
+            pointsY[i] = getPoint(i).getY()*scale+cY;
+        }
+        gc.fillPolygon(pointsX, pointsY, pointsCount);
+        gc.strokePolygon(pointsX, pointsY, pointsCount);
+        //gc.strokePolygon(pointsX, pointsY, pointsCount);
+
+
+
+    }
+
+    public void drawFilled(Graphics2D graphics2D, Point centerPoint, float scale){
+
+        if(pointsCount < 3)
+            throw new IllegalStateException("Less than 3 points in polygon.");
+        java.awt.Polygon awtPolygon = new java.awt.Polygon();
+        graphics2D.setColor(java.awt.Color.BLACK);
+        float cX = centerPoint.getX();
+        float cY = centerPoint.getY();
+
+        for(int i = 0; i < pointsCount; i++){
+            awtPolygon.addPoint((int)(getPoint(i).getX()*scale+cX),(int)(getPoint(i).getY()*scale+cY));
+        }
+        graphics2D.fill(awtPolygon);
     }
 
 
@@ -366,7 +470,9 @@ public class Polygon {
         //++lastBeforeRemoved;
         for(Point p: o.points){
             if( ! intPointsToRemove.containsKey(l)){
-                res.addPoint(++lastBeforeRemoved,o.getPoint(l));
+                if (! res.addPoint(++lastBeforeRemoved,o.getPoint(l)))
+                    --lastBeforeRemoved;
+                //res.getPoint(lastBeforeRemoved).setTag(true);
             }
             l=o.cir(l-1);
         }
@@ -381,25 +487,51 @@ public class Polygon {
         if (o == null || getClass() != o.getClass()) return false;
         Polygon polygon = (Polygon) o;
         if( pointsCount == polygon.pointsCount &&
-                Float.compare(polygon.sideLength, sideLength) == 0 &&
-                Float.compare(polygon.anglesSum, anglesSum) == 0){
-                int j = ((Polygon) o).angles.indexOf(angles.get(0));
-                if(j == -1){
-                    return false;
-                }
-                for(int i = 0; i < pointsCount; i++){
-                    if(! angles.get(i).equals(((Polygon)o).angles.get((i+j)%pointsCount)) ||
-                            ! sides.get(i).equals(((Polygon)o).sides.get((i+j)%pointsCount))) {
-                        return false;
-                    }
-
-                }
-                return true;
+                Float.compare(polygon.sideLength, sideLength) <= DIM_DELTA*pointsCount*pointsCount &&
+                Float.compare(polygon.anglesSum, anglesSum) <= ANG_DELTA*pointsCount){
+//            float angle= (Polygon o).getAngle(0);
+//            angles.stream().filter(a -> (int)(a*60f) == (int)(angle*60f)).collect()
+//            int j = ((Polygon) o).angles.indexOf(angles.get(0));
+//            if(j == -1){
+//                return false;
+//            }
+//            for(int i = 0; i < pointsCount; i++){
+//                if(! angles.get(i).equals(((Polygon)o).angles.get((i+j)%pointsCount)) ||
+//                        ! sides.get(i).equals(((Polygon)o).sides.get((i+j)%pointsCount))) {
+//                    return false;
+//                }
+//
+//            }
+            return true;
 
         }else{
             return false;
         }
     }
+
+    @Override
+    public int hashCode() {
+        return com.google.common.base.Objects.hashCode(pointsCount, (int)sideLength, (int)(anglesSum*60f));
+    }
+
+//    @Override
+//    public boolean equals(Object o) {
+//        if (this == o) return true;
+//        if (o == null || getClass() != o.getClass()) return false;
+//        Polygon polygon = (Polygon) o;
+//        if( pointsCount == polygon.pointsCount &&
+//                Float.compare(polygon.sideLength, sideLength) <= DIM_DELTA*pointsCount &&
+//                Float.compare(polygon.anglesSum, anglesSum) <= ANG_DELTA*pointsCount){
+//            return true;
+//
+//        }else{
+//            return false;
+//        }
+//    }
+//@Override
+//public int hashCode() {
+//    return com.google.common.base.Objects.hashCode(pointsCount, (int)sideLength, (int)anglesSum*60) ;
+//}
 
     public boolean hasNextPoint(){
         return points.iterator().hasNext();
@@ -414,10 +546,7 @@ public class Polygon {
     }
 
 
-    @Override
-    public int hashCode() {
-        return com.google.common.base.Objects.hashCode(pointsCount, sideLength, anglesSum);
-    }
+
 
     @Override
     public String toString() {

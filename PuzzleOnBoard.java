@@ -126,4 +126,15 @@ public class PuzzleOnBoard extends Puzzle {
                 cg.getX()/getPointsCount()*scale+centerPoint.getX(),
                 cg.getY()/getPointsCount()*scale+centerPoint.getY());
     }
+
+//    public void drawFilled(GraphicsContext gc, Point centerPoint, float scale) {
+//        super.draw(gc, centerPoint, scale);
+//        Point cg = new Point(0,0);
+//        for(int i=0; i < getPointsCount(); i++){
+//            cg.move(getPoint(i));
+//        }
+//        gc.strokeText(getId()+(fliped?" f ":""),
+//                cg.getX()/getPointsCount()*scale+centerPoint.getX(),
+//                cg.getY()/getPointsCount()*scale+centerPoint.getY());
+//    }
 }

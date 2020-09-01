@@ -3,6 +3,13 @@ package mensa;
 import javafx.scene.canvas.GraphicsContext;
 import javafx.scene.paint.Color;
 
+import javafx.scene.*;
+
+import javafx.scene.image.Image;
+import javafx.scene.layout.Region;
+import javafx.stage.Stage;
+
+import java.awt.*;
 import java.util.ArrayList;
 
 public class Layout {
@@ -12,7 +19,8 @@ public class Layout {
 
     private Polygon envelope;
     private Polygon envelopeEnlarged;
-    private ArrayList<PuzzleOnBoard> puzzlesOnBoard;
+    //private ArrayList<PuzzleOnBoard> puzzlesOnBoard;
+    private PuzzleRepository puzzlesOnBoard;
     private int iteration=0;
     private int parentIteration=-1;
 
@@ -53,13 +61,26 @@ public class Layout {
     public Layout(){
         envelope = new Polygon();
         envelopeEnlarged = new Polygon();
-        puzzlesOnBoard =  new ArrayList<>();
+        puzzlesOnBoard =  new PuzzleRepository();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
+        if (! super.equals(o)) return false;
+        return puzzlesOnBoard.equals(((Layout )o).puzzlesOnBoard);
+    }
+
+    @Override
+    public int hashCode() {
+        return com.google.common.base.Objects.hashCode(super.hashCode(), puzzlesOnBoard.hashCode());
     }
 
     public Layout(Layout l, int iteration){
         envelope = new Polygon(l.envelope);
         envelopeEnlarged = new Polygon(l.envelopeEnlarged);
-        puzzlesOnBoard =  new ArrayList<>(l.puzzlesOnBoard);
+        puzzlesOnBoard =  new PuzzleRepository(l.puzzlesOnBoard);
         this.iteration=iteration;
         this.parentIteration=l.iteration;
     }
@@ -95,14 +116,20 @@ public class Layout {
     }
 
     public float getAngleToSegment(int pointId, int nextPointId, Segment segment) {
-        return segment.angleBetween(new Segment(getPoint(pointId), getPoint(nextPointId)));
+        return new Segment(getPoint(pointId), getPoint(nextPointId)).angleBetween(segment);
     }
 
+    @Override
+    public String toString() {
+        return "Layout{" +
+                "envelope=" + envelope +
+                '}';
+    }
 
     public void draw(GraphicsContext gc, Point centerPoint, float scale){
         envelope.setColor(Color.BLUE);
         envelope.draw(gc,centerPoint,scale);
-        envelopeEnlarged.setColor(Color.LIGHTGRAY);
+        envelopeEnlarged.setColor(Color.GRAY);
         envelopeEnlarged.draw(gc,centerPoint,scale);
         for(PuzzleOnBoard p: puzzlesOnBoard){
             p.setColor(Color.RED);
@@ -110,6 +137,40 @@ public class Layout {
         }
         gc.strokeText(" parIt "+getParentIteration()+" it "+getIteration(),600,600);
     }
+
+    public void drawSimplified(GraphicsContext gc, Point centerPoint, float scale){
+        envelope.setColor(Color.BLACK);
+        envelope.drawSimplified(gc,centerPoint,scale);
+        for(PuzzleOnBoard p: puzzlesOnBoard){
+            p.setColor(Color.BLACK);
+            p.drawFilled(gc,centerPoint,scale);
+        }
+        //gc.strokeText(" parIt "+getParentIteration()+" it "+getIteration(),600,600);
+    }
+
+    public void drawSimplified(Graphics2D graphics2D,Point centerPoint, float scale){
+        graphics2D.setColor(java.awt.Color.WHITE);
+        graphics2D.fillRect(0, 0, 50, 50);
+        graphics2D.setColor(java.awt.Color.BLACK);
+        envelope.drawSimplified(graphics2D,centerPoint,scale);
+        for(PuzzleOnBoard p: puzzlesOnBoard){
+            p.drawFilled(graphics2D,centerPoint,scale);
+        }
+
+
+    }
+
+/*    public Image snapshot(final Parent sourceNode){
+        Region region = new Region();
+        //region.set
+        //region.s
+        final Scene snapshotScene = new Scene(region);
+
+        return sourceNode.snapshot(
+                new SnapshotParameters(),
+                null
+        );
+    }*/
 //    public Layout(ArrayList<Puzzle> puzzleAvailable, BoardNode boardNodeRoot, ArrayList<PuzzleOnBoard> puzzles){
 //        this.puzzleAvailable = new ArrayList<>(puzzleAvailable);
 //        this.boardNodeRoot = new BoardNode(boardNodeRoot);

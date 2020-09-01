@@ -12,6 +12,7 @@ import java.util.*;
 
 
 
+
 public class Main extends Application {
     static ArrayList<Puzzle> puzzle;
     static SolverThread solverThread;
@@ -47,48 +48,39 @@ public class Main extends Application {
         layout.addPoint(new Point(1040,0));
         layout.addPoint(new Point(1040,1040));
         layout.addPoint(new Point(0,1040));
+        layout.getPoint(0).setTag(true);
+//        float angle=0;
+//        PuzzleOnBoard puzzleOnBoard =  new PuzzleOnBoard();
+//        for(int i=0; i < 36; i++){
+//
+//            puzzleOnBoard = puzzleOnBoard.takePuzzle(pr.getById("6|7"))
+//                    .rotate(-angle)
+//                    .aroundPoint(0)
+//                    .move(layout.getPoint(i))
+//                    .placeOnBoard();
+//            puzzleOnBoard.draw(gc, new Point(100+i*10, 100+i*10), 0.5f);
+//            System.out.println("Rotate Angle "+String.valueOf(-angle));
+//            System.out.println( " Angle between Segment0 and puzzle segment 0-1 "+Context.getInstance().getSegment0().angleBetween( new Segment(puzzleOnBoard.getPoint(0), puzzleOnBoard.getPoint(1)) ));
+//            System.out.println( " Angle between Segment0 and puzzle segment 0-1 "+Context.getInstance().getSegment0().angleBetween( new Segment(puzzleOnBoard.getPoint(0), puzzleOnBoard.getPoint(1)) ));
+//            System.out.println( " Angle between puzzle segment 0-1 and Segment0 "+ new Segment(puzzleOnBoard.getPoint(0), puzzleOnBoard.getPoint(1)).angleBetween(Context.getInstance().getSegment0()));
+//            angle = angle + 0.174f;
+//        }
 
         solver.add(solver.new LayoutPuzzles(layout, pr));
         solverThread = new SolverThread(solver);
 
         new Thread(solverThread).start();
-        //drawMatching(gc);
-        //testPolygon.draw(gc, new Point(100,100), 1f);
-        /*for(Polygon poly: testPolygons){
-            poly.draw(gc,new Point(100,100), 0.5f);
-        }*/
-//        drawBoard(gc);
-///*        Puzzle p = puzzle.get(0);
-//        p.setPosition(0,0,2,false, 0, 0.0);
-        //p.draw(gc);*/
+
+
 
         root.getChildren().add(canvas);
         primaryStage.setScene(new Scene(root));
         primaryStage.show();
     }
 
-    /*public static void findAllMatching(){
 
-    }*/
 
-    /*public static  LinkedList<PuzzleRot>  findAllMatching(float convAngle,
-                                                                      float length,
-                                                                      int boxSide,
-                                                                      LinkedList<PuzzleRot> leading,
-                                                                      ArrayList<Puzzle> available)
-    {
-         iterations++;
-         if(iterations%10 == 0){
-             System.out.println("iterations "+iterations);
-             System.out.println("availableSize "+available.size());
-         }
-        LinkedList<PuzzleRot> ret = new LinkedList<>();
-        if((length) <= 30.0){
-            if (boxSide == 3) {
-                return ret;
-            }
 
-    }*/
 
     public static void drawBoard(GraphicsContext gc){
         gc.setFill(Color.GREEN);
@@ -113,21 +105,7 @@ public class Main extends Application {
 
 
 
-  /*  public static void generatePuzzleRot(){
-        puzzleRot = new ArrayList<>();
-        PuzzleRot pR;
-        for(Puzzle p: puzzle){
-            for(int i=0; i<p.getSidesIterable(); i++){
-                pR = new PuzzleRot(p,i,false);
-                puzzleRot.add(pR);
-                if(p.isTwoSided()){
-                    pR = new PuzzleRot(p,i,true);
-                    puzzleRot.add(pR);
-                }
-            }
-        }
-        //Collections.sort(puzzleRot);
-    }*/
+
 
 
 
@@ -161,21 +139,7 @@ public class Main extends Application {
     private static void polygonTest(){
         //generateSimplified1();;
 
-/*        PuzzleOnBoard puzzleOnBoard = new PuzzleOnBoard();
-        puzzleOnBoard = puzzleOnBoard.takePuzzle(puzzle.get(10))
-                                      .rotate((float)Math.PI/5)
-                                      .aroundPoint(0)
-                                      .move(new Point(500, 100))
-                                      .placeOnBoard();
 
-        PuzzleOnBoard puzzleOnBoard1 = new PuzzleOnBoard();
-        puzzleOnBoard1 = puzzleOnBoard1.takePuzzle(puzzle.get(10))
-                .rotate(-(float)Math.PI/5)
-                .aroundPoint(0)
-                .move(new Point(800, 800))
-                .placeOnBoard();
-        testPolygons.add(puzzleOnBoard);
-        testPolygons.add(puzzleOnBoard1);*/
 //        testPolygon.calculate();System.out.println(testPolygon.toString());
 //        testPolygon.addPoint(1, new Point (120,30));
 //        testPolygon.calculate();

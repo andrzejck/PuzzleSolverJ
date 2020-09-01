@@ -12,12 +12,23 @@ public class Puzzle extends Polygon {
     private int sidesIterable=0;
     public static float DEG180 = (float) Math.PI;
 
+    public Puzzle getMirrorRefl() {
+        if(mirrorRefl == null)
+            throw new IllegalStateException("mirror refl is null");
+        return mirrorRefl;
+    }
+
+    Puzzle mirrorRefl = null;
+
     public boolean isTwoSided() {
         return twoSided;
     }
 
     public void setTwoSided(boolean twoSided) {
         this.twoSided = twoSided;
+        if(twoSided) {
+            generateMirrorRefl();
+        }
     }
 
     public int getSidesIterable() {
@@ -45,6 +56,7 @@ public class Puzzle extends Polygon {
     Puzzle(String id){
         super();
         this.id = id;
+        mirrorRefl = null;
     }
 
     Puzzle(Puzzle p){
@@ -52,6 +64,14 @@ public class Puzzle extends Polygon {
         this.id=p.id;
         this.sidesIterable=p.sidesIterable;
         this.twoSided=p.twoSided;
+        if (p.mirrorRefl != null)
+            this.mirrorRefl=new PuzzleOnBoard(p.mirrorRefl);
+        else
+            p.mirrorRefl = null;
+    }
+    public void generateMirrorRefl(){
+        mirrorRefl=new Puzzle(this);
+        mirrorRefl.flipVertical();
     }
 
 

@@ -3,14 +3,23 @@ package mensa;
 import java.util.Objects;
 
 public class Point {
+
     public Point(float x, float y) {
         this.x = x;
         this.y = y;
+        tag = false;
+    }
+
+    public Point(float x, float y, boolean tag) {
+        this.x = x;
+        this.y = y;
+        this.tag = tag;
     }
 
     public Point(Point p){
         x = p.x;
         y = p.y;
+        tag = p.tag;
     }
 
     public float getX() {
@@ -98,6 +107,15 @@ public class Point {
     private float x;
     private float y;
 
+    public boolean isTag() {
+        return tag;
+    }
+
+    public void setTag(boolean tag) {
+        this.tag = tag;
+    }
+
+    private boolean tag;
 
     public void setY(float y) {
         this.y = y;
